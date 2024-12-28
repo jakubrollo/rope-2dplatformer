@@ -1,0 +1,83 @@
+[gd_scene load_steps=9 format=3 uid="uid://dk1ctt8lufi7j"]
+
+[ext_resource type="PackedScene" uid="uid://fhk26kw5alwx" path="res://scenes/Environment.tscn" id="1"]
+[ext_resource type="PackedScene" uid="uid://urydr0rqxuxr" path="res://scenes/Player.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://o6guho11r4et" path="res://scenes/Crate.tscn" id="3"]
+[ext_resource type="PackedScene" uid="uid://ds6j6cs8nmo2c" path="res://scenes/RopeEndPiece.tscn" id="4_ehlt0"]
+[ext_resource type="PackedScene" uid="uid://dy44adru6f0de" path="res://scenes/RopePiece.tscn" id="5_nb2jn"]
+[ext_resource type="Script" path="res://scripts/camera_script.gd" id="6_fl5df"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_eueij"]
+friction = 0.2
+bounce = 0.5
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_abn4i"]
+size = Vector2(40, 20)
+
+[node name="Scene" type="Node2D"]
+
+[node name="Environment" parent="." groups=["Ground"] instance=ExtResource("1")]
+
+[node name="Player" parent="." node_paths=PackedStringArray("raycast") instance=ExtResource("2")]
+z_index = 1
+position = Vector2(569, 313)
+max_jump_force = 850.0
+min_jump_force = 400.0
+jump_cooldown_time = 0.3
+raycast = NodePath("../ShapeCast2D")
+
+[node name="Crate" parent="." instance=ExtResource("3")]
+collision_mask = 7
+physics_material_override = SubResource("PhysicsMaterial_eueij")
+
+[node name="RopeEndPiece" parent="." instance=ExtResource("4_ehlt0")]
+visible = false
+position = Vector2(530, 161)
+scale = Vector2(0.993024, 1)
+
+[node name="RopePiece" parent="." instance=ExtResource("5_nb2jn")]
+visible = false
+position = Vector2(530, 183)
+
+[node name="PinJoint2D" parent="RopePiece" index="2"]
+node_b = NodePath("../../RopeEndPiece")
+
+[node name="RopePiece2" parent="RopePiece" instance=ExtResource("5_nb2jn")]
+position = Vector2(0, 21)
+
+[node name="PinJoint2D" parent="RopePiece/RopePiece2" index="2"]
+node_b = NodePath("../..")
+
+[node name="RopePiece4" parent="RopePiece/RopePiece2" instance=ExtResource("5_nb2jn")]
+position = Vector2(0, 20)
+
+[node name="PinJoint2D" parent="RopePiece/RopePiece2/RopePiece4" index="2"]
+node_b = NodePath("../..")
+
+[node name="RopePiece3" parent="RopePiece/RopePiece2/RopePiece4" instance=ExtResource("5_nb2jn")]
+position = Vector2(0, 21)
+
+[node name="PinJoint2D" parent="RopePiece/RopePiece2/RopePiece4/RopePiece3" index="2"]
+node_b = NodePath("../..")
+
+[node name="RopeEndPiece" parent="RopePiece/RopePiece2/RopePiece4/RopePiece3" instance=ExtResource("4_ehlt0")]
+position = Vector2(0, 20)
+
+[node name="PinJoint2D" parent="RopePiece/RopePiece2/RopePiece4/RopePiece3/RopeEndPiece" index="2"]
+node_b = NodePath("../..")
+
+[node name="Camera2D" type="Camera2D" parent="." node_paths=PackedStringArray("follow_object")]
+position = Vector2(570, 94)
+zoom = Vector2(0.9, 0.9)
+script = ExtResource("6_fl5df")
+follow_object = NodePath("../Player")
+
+[node name="ShapeCast2D" type="ShapeCast2D" parent="."]
+shape = SubResource("RectangleShape2D_abn4i")
+collision_mask = 2
+
+[editable path="RopePiece"]
+[editable path="RopePiece/RopePiece2"]
+[editable path="RopePiece/RopePiece2/RopePiece4"]
+[editable path="RopePiece/RopePiece2/RopePiece4/RopePiece3"]
+[editable path="RopePiece/RopePiece2/RopePiece4/RopePiece3/RopeEndPiece"]

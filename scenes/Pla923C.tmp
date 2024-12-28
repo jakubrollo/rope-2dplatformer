@@ -1,0 +1,139 @@
+[gd_scene load_steps=14 format=3 uid="uid://urydr0rqxuxr"]
+
+[ext_resource type="Script" path="res://scripts/Controller.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://4gma43mbbufu" path="res://sprites/characters/player_stand.png" id="2"]
+[ext_resource type="PackedScene" uid="uid://cfut85q05i14h" path="res://scenes/rope.tscn" id="2_pepuh"]
+[ext_resource type="Texture2D" uid="uid://dn28b4x6n7qc" path="res://sprites/characters/player.png" id="4_3wofh"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_2sd1e"]
+friction = 0.5
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_3g5j4"]
+height = 25.6657
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r31t3"]
+size = Vector2(21.25, 2.625)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m5edg"]
+atlas = ExtResource("4_3wofh")
+region = Rect2(0, 0, 80, 110)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0i46h"]
+atlas = ExtResource("4_3wofh")
+region = Rect2(80, 0, 80, 110)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k52k2"]
+atlas = ExtResource("4_3wofh")
+region = Rect2(0, 110, 80, 110)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m1bhp"]
+atlas = ExtResource("4_3wofh")
+region = Rect2(0, 220, 80, 110)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ova1n"]
+atlas = ExtResource("4_3wofh")
+region = Rect2(0, 330, 80, 110)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b7y6i"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m5edg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0i46h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k52k2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m1bhp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ova1n")
+}],
+"loop": true,
+"name": &"all",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ova1n")
+}],
+"loop": true,
+"name": &"falling",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 10.0,
+"texture": SubResource("AtlasTexture_k52k2")
+}, {
+"duration": 100.0,
+"texture": ExtResource("2")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m1bhp")
+}],
+"loop": true,
+"name": &"jumping",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m5edg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0i46h")
+}],
+"loop": true,
+"name": &"walking",
+"speed": 5.0
+}]
+
+[node name="Player" type="RigidBody2D" groups=["Player"]]
+position = Vector2(517, 325)
+collision_mask = 2
+physics_material_override = SubResource("PhysicsMaterial_2sd1e")
+gravity_scale = 0.0
+lock_rotation = true
+script = ExtResource("1")
+rope_scene = ExtResource("2_pepuh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.499939, 5.99997)
+rotation = -3.14159
+scale = Vector2(1.45478, -2.1819)
+shape = SubResource("CapsuleShape2D_3g5j4")
+
+[node name="Area2D" type="Area2D" parent="."]
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(0.375, 32.6875)
+shape = SubResource("RectangleShape2D_r31t3")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="."]
+position = Vector2(0, 6)
+node_a = NodePath("..")
+
+[node name="RayCast2D" type="RayCast2D" parent="."]
+collision_mask = 3
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 2)
+scale = Vector2(0.495422, 0.495422)
+sprite_frames = SubResource("SpriteFrames_b7y6i")
+animation = &"all"
+
+[connection signal="area_shape_entered" from="Area2D" to="." method="_on_area_2d_area_shape_entered"]
+[connection signal="area_shape_exited" from="Area2D" to="." method="_on_area_2d_area_shape_exited"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]
