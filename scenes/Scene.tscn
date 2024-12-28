@@ -21,7 +21,6 @@ size = Vector2(40, 20)
 [node name="Player" parent="." node_paths=PackedStringArray("raycast") instance=ExtResource("2")]
 z_index = 1
 position = Vector2(569, 313)
-is_skeleton_animation = true
 max_jump_force = 850.0
 min_jump_force = 400.0
 jump_cooldown_time = 0.3
