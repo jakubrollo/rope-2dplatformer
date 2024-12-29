@@ -38,5 +38,6 @@ angular_limit_lower = -1.5708
 angular_limit_upper = 1.5708
 
 [node name="Sprite2D" type="Sprite2D" parent="PinJoint2D"]
+visible = false
 scale = Vector2(1.43461, 0.177322)
 texture = ExtResource("3_ms3jr")
